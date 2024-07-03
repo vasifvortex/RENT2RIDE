@@ -1,0 +1,5 @@
+export const GET_ALL_BIKES = "/api/read"
+export const GET_SINGLE_BIKE = "/api/read_single"
+export const CREATE_BIKE = "/api/creat" 
+export const UPDATE_BIKE = "/api/update"
+export const DELETE_BIKE = "/api/delete"

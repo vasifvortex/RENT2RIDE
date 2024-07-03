@@ -1,0 +1,213 @@
+{%load static%}
+<link rel="stylesheet" href="{% static 'css/style.css' %}" />
+<form method="post" action="\bill">
+  {% csrf_token %}
+<div class="container" id="yo">
+  
+  <div class="cols my-4">
+    <h2 style="text-align : center" class="head my-4">Booking Details</h2>   
+      <div class="form-group col-md-12">
+        <label for="inputEmail4">Full Name : </label>
+        <input type="text" class="form-control" id="billname" name = "billname" placeholder="Full Name">
+      </div>
+      <div class="form-row ">
+        <div class="form-group col-md-6">
+          <label for="billemail">Email : </label>
+          <input type="email" class="form-control" id="billemail" name = "billemail" placeholder="name@gmail.com">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="billphone">Phone Number : </label>
+          <input type="tel" class="form-control" id="billphone" name = "billphone">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputAddress">Address</label>
+        <input type="text" class="form-control" id="billaddress" name = "billaddress" placeholder="COEP">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputCity">City</label>
+          <input type="text" class="form-control" id="billcity" name="billcity">
+        </div>
+      {% comment %} <p>Price : {{cycles.price}}</p> {% endcomment %}
+      </div>  
+      <h2 style="text-align : center" class="head my-4">Bike Details</h2>
+      <div class="form-row ">
+        <div class="form-group col-md-6">
+          <label for="cycles11">Bike Chosen (For Confirmation)</label>
+          <select id="cycles11" name = "cycles11" class="form-control">
+            <option selected="selected" disabled>Choose...</option>
+            <option value = "Renault">Renault</option>
+            <option value = "Alto 800">Alto 800</option>
+            <option value = "Innova Crysta">Innova Crysta</option>
+            <option value = "Chevy Traverse">Chevy Traverse</option>
+            <option value = "BMW X5">BMW X5</option>
+            <option value = "Honda City">Honda City</option>
+            <option value = "Mercedes Benz">Mercedes Benz</option>
+            <option value = "Swift Dezire">Swift Dezire</option>
+            <option value = "KIA">KIA</option>
+          </select>
+        </div>
+        <section class="bikes">
+                
+        </section>
+      <div class="form-row ">
+        <div class="form-group col-md-6" id="d11">
+          <label for="dayss">No. of days : </label>
+            <input type="number" class="form-control" id="dayss" name ="dayss" min=1 max = 30>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="date">Pickup Date : </label>
+          <input type="date" class="form-control" id="date" name="date">
+        </div>
+      </div>
+  
+
+      <div class="cols1 my-4">
+        <h2 style="text-align : center">Total Bill</h2>
+        <ul class="list-group">
+          <li class="list-group-item d-flex justify-content-between align-items-center my-3" id="rentsec">
+            <p>
+               Total Rent is : AZN <span></span>
+            </p>
+         </li>
+        </ul>
+      </div>
+  </div>
+</div>
+
+<div class="text-center">
+  <button class="btn btn-primary " type="button" data-toggle="modal" data-target="#exampleModalLong" id="showre" onclick="calculate()">Display Bill</button> 
+  <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" id="13">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document" id="14" style="height:750px">
+      <div class="modal-content" id="15" style="background-color:rgb(226, 239, 251); ">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle">Receipt : </h5>
+
+          
+        </div>
+        <div class="modal-body" id="printThis"><h1 style="text-align:center; background: -webkit-linear-gradient(#77f7f1, #094240);-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;" > Thanks for Booking! </h1><br>
+          <p id="n1" class="p2" style="text-align:center; font-size: 25px; font-weight:bold; color:rgb(35, 12, 109)" >Customer Name :  <span></span></p>
+          <p id="d2" class="p8" style="text-align:center; font-size: 25px; font-weight:bold; color:rgb(35, 12, 109)" >No. of days for rent :  <span></span></p>
+          <p id="d1" class="p2" style="text-align:center; font-size: 25px; font-weight:bold; color:rgb(35, 12, 109)" >Pickup date :  <span></span></p>
+        
+          <p style="text-align:center; font-size: 23px;">
+          <span style="font-weight:bold" id="crs1">Bike : <span></span>
+          <p id="total" class="p1" style="text-align:center; font-size: 25px; font-weight:bold" >Total Bill: AZN <span>N/A</span></p>
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="btnPrint">Download Receipt</button>
+          <button class="btn btn-primary " type="submit"  >Confirm Booking</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
+
+
+
+<script>
+  const apiUrl = 'http://127.0.0.1:8000/api/read';
+
+fetch(apiUrl)
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+  })
+  
+
+  function calculate(){
+    var select = document.getElementById("cycles11");
+    var option = select.value;
+    var rent = 0;
+
+    if(option == "Renault"){
+        rent = 2000;
+    }
+    else if(option == "Alto 800"){
+      rent = 700;
+    }
+    else if(option == "Innova Crysta"){
+      rent = 3500;
+    }
+    else if(option == "Chevy Traverse"){
+      rent = 3000;
+    }
+    else if(option == "BMW X5"){
+      rent = 10000;
+    }
+    else if(option == "Honda City"){
+      rent = 2500;
+    }
+    else if(option == "Mercedes Benz"){
+      rent = 40000;
+    }
+    else if(option == "Swift Dezire"){
+      rent = 1000;
+    }
+    else if(option == "KIA"){
+      rent = 800;
+    }
+    else{
+      rent = 0;
+    }
+    var rent1 = parseInt(rent);
+    var d1 = document.getElementById('d11');
+    var d2 = d1.querySelector('#dayss');
+    var d3 = Number(d2.value);
+    var total = rent * d3;
+
+    var num = document.getElementById('rentsec');
+    var num1 = num.querySelector("span");
+    num1.textContent = total;
+
+    var name1 = document.getElementById("billname").value;
+    var name2 = document.getElementById("n1");
+    var name3 = name2.querySelector("span");
+    name3.innerHTML = name1;
+
+      var da1 = document.getElementById("date").value;
+      var da2 = document.getElementById("d1");
+      var da3 = da2.querySelector("span");
+      da3.innerHTML = da1;
+
+      var dy1 = document.getElementById('d2');
+      var dy2 = dy1.querySelector("span");
+      dy2.innerHTML = d3;
+
+      var carn1 = document.getElementById('crs1');
+      var carn2 = carn1.querySelector("span");
+      carn2.innerHTML = option;
+
+      var tp = document.getElementById("printThis")
+      var tp1 = tp.querySelector(".p1")
+      var tp2 = tp1.querySelector("span");
+      tp2.innerHTML = total;
+  }
+
+  document.getElementById("btnPrint").onclick = function () {
+    printElement(document.getElementById("printThis"));
+}
+
+function printElement(elem) {
+    var domClone = elem.cloneNode(true);
+    
+    var $printSection = document.getElementById("printSection");
+    
+    if (!$printSection) {
+        var $printSection = document.createElement("div");
+        $printSection.id = "printSection";
+        document.body.appendChild($printSection);
+    }
+    window.print();
+}
+
+</script>

@@ -1,0 +1,403 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bikes</title>
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+</head>
+<body>
+    <header>
+        <div class="container">
+          <nav class="header-nav">
+            <div class="nav-logo">
+              <a href="{% url 'index' %}">
+                <img src="{% static 'assets/logo.png' %}" alt="Logo" />
+              </a>
+            </div>
+            <i class="fa-solid fa-bars burger-menu"></i>
+            <ul class="nav-links">
+              <li><a href="{% url 'index' %}">home</a></li>
+              <li class="locateToBikesPage"><a href="{% url 'bikes' %}">services</a></li>
+              <li><a href="{% url 'contact' %}">contact</a></li>
+              <li class="accounts-trigger">
+              <a>account </a>
+              <div class="accounts-modal">
+              {% if user.is_authenticated %}
+              <a href="{% url 'account' %}" class="account-login">profile</a>
+                  <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">
+                      Logout
+                      <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                  </form>
+              {% else %}
+                <a href="{% url 'login' %}" class="account-login">Login</a>
+                <a href="{% url 'registration' %}" class="account-register">Register</a>
+              {% endif %}
+              </div>
+              </li>
+              <li><a href="{% url 'favourites' %}"><i class="fa-solid fa-heart"></i></a></li>
+              {% if user.is_authenticated %}
+            <li class="cart_button_li">
+              <button class="cart_button">
+                <div class="cart_button__bubble">2</div>
+                <svg
+                  width="28"
+                  height="28"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M19.5613 4.87359C19.1822 4.41031 18.5924 4.12873 17.9821 4.12873H5.15889L4.75914 2.63901C4.52718 1.77302 3.72769 1.16895 2.80069 1.16895H0.653099C0.295301 1.16895 0 1.45052 0 1.79347C0 2.13562 0.294459 2.418 0.653099 2.418H2.80069C3.11654 2.418 3.39045 2.61936 3.47434 2.92139L6.04306 12.7077C6.27502 13.5737 7.07451 14.1778 8.00152 14.1778H16.4028C17.3289 14.1778 18.1507 13.5737 18.3612 12.7077L19.9405 6.50575C20.0877 5.941 19.9619 5.33693 19.5613 4.87365L19.5613 4.87359ZM18.6566 6.22252L17.0773 12.4245C16.9934 12.7265 16.7195 12.9279 16.4036 12.9279H8.00154C7.68569 12.9279 7.41178 12.7265 7.32789 12.4245L5.49611 5.39756H17.983C18.1936 5.39756 18.4042 5.49824 18.5308 5.65948C18.6567 5.81994 18.7192 6.0213 18.6567 6.22266L18.6566 6.22252Z"
+                    fill="#43464E"
+                  ></path>
+                  <path
+                    d="M8.44437 14.9814C7.2443 14.9814 6.25488 15.9276 6.25488 17.0751C6.25488 18.2226 7.24439 19.1688 8.44437 19.1688C9.64445 19.1696 10.6339 18.2234 10.6339 17.0757C10.6339 15.928 9.64436 14.9812 8.44437 14.9812V14.9814ZM8.44437 17.9011C7.9599 17.9011 7.58071 17.5385 7.58071 17.0752C7.58071 16.6119 7.9599 16.2493 8.44437 16.2493C8.92885 16.2493 9.30804 16.6119 9.30804 17.0752C9.30722 17.5188 8.90748 17.9011 8.44437 17.9011Z"
+                    fill="#43464E"
+                  ></path>
+                  <path
+                    d="M15.6875 14.9814C14.4875 14.9814 13.498 15.9277 13.498 17.0752C13.498 18.2226 14.4876 19.1689 15.6875 19.1689C16.8875 19.1689 17.877 18.2226 17.877 17.0752C17.8565 15.9284 16.8875 14.9814 15.6875 14.9814ZM15.6875 17.9011C15.2031 17.9011 14.8239 17.5385 14.8239 17.0752C14.8239 16.612 15.2031 16.2493 15.6875 16.2493C16.172 16.2493 16.5512 16.612 16.5512 17.0752C16.5512 17.5188 16.1506 17.9011 15.6875 17.9011Z"
+                    fill="#43464E"
+                  ></path>
+                </svg>
+              </button>
+              <div class="cart-container">
+                <h3 class="cart-title">Your Cart</h3>
+                <ul class="cart-items">
+                  <!-- Cart items will be dynamically inserted here -->
+                </ul>
+                <div class="cart-total">
+                  <span class="total-label">Total</span>
+                  <span class="total-amount">$0.00</span>
+                </div>
+                <a
+                  id="checkoutButton"
+                  href="{% url 'checkout' %}"
+                  class="checkout-button disabled"
+                  >Checkout</a
+                >
+              </div>
+            </li>
+            {% endif %}
+            </ul>
+            <div class="dark-mode-wrapper">
+              <i class="fa-solid fa-moon"></i>
+            </div>
+          
+          </nav>
+        </div>
+      </header>
+      <div class="burger-menu-wrapper">
+        <div class="burger-header container">
+          <div class="dark-mode-wrapper dark-mode-wrapper-mobile">
+            <i class="fa-solid fa-moon"></i>
+          </div>
+          <i class="fa-solid fa-xmark burger-menu-closer"></i>
+        </div>
+        <div class="burger-body container">
+          <div class="burger-welcome">
+            <img src="{% static 'assets/logo.png' %}" alt="Logo" />
+            <h2>Welcome to Rent2Ride !</h2>
+          </div>
+          <ul>
+            <li><a href="{% url 'index' %}">home</a></li>
+              <li class="locateToBikesPage"><a href="{% url 'bikes' %}">services</a></li>
+              <li><a href="{% url 'contact' %}">contact</a></li>
+              <li class="accounts-trigger">
+              <a>account </a>
+              <div class="accounts-modal">
+              {% if user.is_authenticated %}
+              <a href="{% url 'account' %}" class="account-login">profile</a>
+                  <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">
+                      Logout
+                      <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                  </form>
+              {% else %}
+                <a href="{% url 'login' %}" class="account-login">Login</a>
+                <a href="{% url 'registration' %}" class="account-register">Register</a>
+              {% endif %}
+              </div>
+              </li>
+              <li><a href="{% url 'favourites' %}"><i class="fa-solid fa-heart"></i></a></li>
+            
+          </ul>
+        </div>
+       
+      </div>
+      </div>
+      <main>
+        <div class="container">
+            <div class="bikes-wrapper">
+             <section class="bikes-search-section">
+                <div class="filter">
+                    <input class="searchInput" type="text" placeholder="Search ... ">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <div class="category-sort-wrapper">
+                  <div class="filter-by-category">
+                    <p>Category : </p>
+                    <div class="category-icon">
+                      <i class="fa-solid fa-list"></i>
+                    </div>
+                    <div class="category-options">
+
+                    </div>
+                  </div>
+                  <div class="sort">
+                    <p>Sort : </p>
+                    <div class="sort-icon">
+                      <i class="fa-solid fa-filter"></i>
+                    </div>
+                    <div class="sort-options">
+                      <div class="price-ascending sort-opt">
+                        Price
+                        <i class="fa-solid fa-sort-up"></i>
+                      </div>
+                      <div class="price-descending sort-opt">
+                        Price
+                        <i class="fa-solid fa-sort-down"></i>
+                      </div>
+                      <div class="title-ascending sort-opt">
+                        Alphabet
+                        <i class="fa-solid fa-arrow-down-a-z"></i>
+                      </div>
+                      <div class="title-descending sort-opt">
+                        Alphabet
+                        <i class="fa-solid fa-arrow-up-a-z"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+             </section>
+             <section class="bikes">
+                
+             </section>
+            </div>
+        </div>
+      </main>
+      <footer>
+        <div class="container">
+          <div class="footer-left">
+            <div class="subscribe-side">
+              <h4>Subscribe</h4>
+              <span>Stay connected and ride with us!</span>
+              <form>
+                <input type="text" placeholder="E-mail..." />
+                <input type="submit" value="SEND" />
+              </form>
+            </div>
+            <div class="footer-social-links">
+              <h4>stay in touch</h4>
+              <div class="social-links">
+                <div class="social-link-box fb">
+                  <i class="fa-brands fa-facebook-f"></i>
+                </div>
+                <div class="social-link-box twit">
+                  <i class="fa-brands fa-x-twitter"></i>
+                </div>
+                <div class="social-link-box insta">
+                  <i class="fa-brands fa-instagram"></i>
+                </div>
+                <div class="social-link-box yt">
+                  <i class="fa-brands fa-youtube"></i>
+                </div>
+              </div>
+              <span>Questions? Get in touch with <a href="mailto:smth@youremail.com">smth@youremail.com</a></span>
+            </div>
+          </div>
+          <div class="footer-right">
+            <div class="footer-infos">
+              <div class="ft-info">
+                <h5>info</h5>
+                <section>
+                  <div>
+                    <a href="#">FAQ</a>
+                    <a href="#">contacts</a>
+                    <a href="#">exchanges</a>
+                  </div>
+                  <div>
+                    <a href="#">FAQ</a>
+                    <a href="#">contacts</a>
+                    <a href="#">exchanges</a>
+                  </div>
+                </section>
+              </div>
+              <div class="ft-info">
+                <h5>shop</h5>
+                <section>
+                  <div>
+                    <a href="#">FAQ</a>
+                    <a href="#">contacts</a>
+                    <a href="#">exchanges</a>
+                  </div>
+                  <div>
+                    <a href="#">FAQ</a>
+                    <a href="#">contacts</a>
+                    <a href="#">exchanges</a>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+      <script src="{% static 'js/common.js' %}"></script>
+      <script type="module" src="{% static '/js/bikes.js' %}"></script>
+      <script>
+        let cart_button__buble = document.querySelector(".cart_button__bubble");
+        let cart_button = document.querySelector(".cart_button");
+  
+        let cartItems = [];
+  
+        cart_button__buble.innerText = cartItems.length;
+        if (cartItems.length === 0) {
+          cart_button__buble.style.display = "none";
+        } else {
+          cart_button__buble.style.display = "block";
+        }
+  
+        fetch("//127.0.0.1:8000/api/cartitems/", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            cartItems = data?.map((e) => ({
+              ...e.cycle,
+              price: Number.parseFloat(e.cycle.price),
+            }));
+            console.log(cartItems);
+            cart_button__buble.innerText = cartItems.length;
+            if (cartItems.length === 0) {
+              cart_button__buble.style.display = "none";
+            } else {
+              cart_button__buble.style.display = "block";
+            }
+            updateCartUI()
+            /*
+            {
+              e.cycle, "price":Number.parseFloat (e.price)
+            }
+              */
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+        const cartButton = document.querySelector(".cart_button");
+        const cartContainer = document.querySelector(".cart-container");
+        const checkoutButton = document.getElementById("checkoutButton");
+        const cartItemsList = document.querySelector(".cart-items");
+        const totalAmount = document.querySelector(".total-amount");
+        function updateCartUI() {
+          cartItemsList.innerHTML = ""; // Clear existing items
+          let totalPrice = 0;
+  
+          cartItems?.forEach((item) => {
+            const li = document.createElement("li");
+            li.classList.add("cart-item");
+            li.innerHTML = `
+          <span>${item.name}</span>
+          <span>$${item.price.toFixed(2)}</span>
+        `;
+            cartItemsList.appendChild(li);
+            totalPrice += item.price;
+          });
+  
+          totalAmount.textContent = `$${totalPrice.toFixed(2)}`;
+          updateCheckoutButtonState();
+        }
+        function updateCheckoutButtonState() {
+            if (cartItems && cartItems.length > 0) {
+              checkoutButton.classList.remove("disabled");
+              checkoutButton.href = "//127.0.0.1:8000/checkout/"; // Replace with actual checkout link
+            } else {
+              checkoutButton.classList.add("disabled");
+              checkoutButton.href = "#";
+            }
+          }
+  
+        console.log(cartItems);
+      </script>
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const cartButton = document.querySelector(".cart_button");
+          const cartContainer = document.querySelector(".cart-container");
+          const checkoutButton = document.getElementById("checkoutButton");
+          const cartItemsList = document.querySelector(".cart-items");
+          const totalAmount = document.querySelector(".total-amount");
+  
+          // Simulated cart data
+          // let cartItems = [
+          //   { id: 1, name: 'Bike', price: 200 },
+          //   { id: 2, name: 'Helmet', price: 100 }
+          // ];
+  
+          // Function to update cart UI
+          function updateCartUI() {
+            cartItemsList.innerHTML = ""; // Clear existing items
+            let totalPrice = 0;
+            console.log(cartItems);
+            cartItems?.forEach((item) => {
+              const li = document.createElement("li");
+              li.classList.add("cart-item");
+              li.innerHTML = `
+          <span>${item.name}</span>
+          <span>$${item.price.toFixed(2)}</span>
+        `;
+              cartItemsList.appendChild(li);
+              totalPrice += item.price;
+            });
+  
+            totalAmount.textContent = `$${totalPrice.toFixed(2)}`;
+            updateCheckoutButtonState();
+          }
+  
+          // Function to toggle cart visibility
+          function toggleCart() {
+            cartContainer.classList.toggle("active");
+          }
+  
+          // Function to update checkout button state
+          function updateCheckoutButtonState() {
+            if (cartItems && cartItems.length > 0) {
+              checkoutButton.classList.remove("disabled");
+              checkoutButton.href = "//127.0.0.1:8000/checkout/"; // Replace with actual checkout link
+            } else {
+              checkoutButton.classList.add("disabled");
+              checkoutButton.href = "#";
+            }
+          }
+  
+          // Event listener for cart button click
+          cartButton.addEventListener("click", function () {
+            toggleCart();
+          });
+  
+          // Initialize cart UI
+          updateCartUI();
+        });
+      </script>
+</body>
+</html>
