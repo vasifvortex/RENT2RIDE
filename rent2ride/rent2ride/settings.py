@@ -70,7 +70,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'cycle_rent',
         'USER': 'root',
-        'PASSWORD': '11112002Vasifwww@',
+        'PASSWORD': 'root',
         'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {
